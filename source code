@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUPAG Konzern</title>
+  
+  <style>
+    :root {
+      --color-text-primary: #000;
+      --color-text-secondary: #666;
+      --color-border-tertiary: #e0e0e0;
+      --border-radius-lg: 8px;
+      --border-radius-md: 6px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { font-family: var(--font-sans); }
+
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(10, 20, 15, 0.85);
+      backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    }
+    .nav-logo { font-size: 20px; font-weight: 500; color: #fff; letter-spacing: -0.3px; }
+    .nav-logo span { color: #1D9E75; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: none; }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { background: #1D9E75; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: var(--font-sans); }
+
+    .hero {
+      position: relative;
+      min-height: 600px;
+      display: flex; align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://www.tupag.de/sites/default/files/styles/imagestyle_tu_slideshow_mobile_frontpage/public/images/tu-slideshow/start_logo_bearbeitet_blendeneffekt.jpg?itok=986L7L45');
+      background-size: cover; background-position: center;
+      filter: brightness(0.45);
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(5,20,12,0.85) 0%, rgba(10,30,20,0.55) 60%, rgba(0,0,0,0.3) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 80px 40px;
+      max-width: 720px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(29,158,117,0.2); color: #5DCAA5;
+      border: 0.5px solid rgba(29,158,117,0.4);
+      font-size: 12px; padding: 5px 14px; border-radius: 100px; margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: 48px; font-weight: 500; line-height: 1.1; letter-spacing: -1px;
+      color: #fff; margin-bottom: 22px;
+    }
+    .hero h1 em { color: #1D9E75; font-style: normal; }
+    .hero p {
+      font-size: 17px; color: rgba(255,255,255,0.7); line-height: 1.7;
+      max-width: 520px; margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-primary {
+      background: #1D9E75; color: #fff; border: none;
+      padding: 13px 26px; border-radius: 6px; font-size: 14px; cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      padding: 13px 26px; border-radius: 6px; font-size: 14px; cursor: pointer;
+      font-family: var(--font-sans);
+    }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: rgba(255,255,255,0.06);
+      border-top: 0.5px solid rgba(255,255,255,0.08);
+      background-color: #0a1410;
+    }
+    .stat { background: #0d1a14; padding: 32px 40px; }
+    .stat-number { font-size: 38px; font-weight: 500; color: #fff; letter-spacing: -0.5px; }
+    .stat-number span { color: #1D9E75; }
+    .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 6px; }
+
+    .section { padding: 64px 40px; background: #f9f9f7; }
+    .section-label { font-size: 11px; color: #1D9E75; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+    .section-title { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; letter-spacing: -0.3px; }
+    .section-sub { font-size: 15px; color: var(--color-text-secondary); max-width: 480px; line-height: 1.6; margin-bottom: 40px; }
+
+    .segments { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+    .segment-card {
+      background: #fff; border: 0.5px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg); padding: 24px 20px; cursor: pointer;
+    }
+    .segment-card:hover { border-color: #1D9E75; }
+    .segment-icon {
+      width: 56px; height: 56px; border-radius: var(--border-radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin-bottom: 16px;
+      line-height: 1;
+    }
+    .segment-card h3 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+    .segment-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+    .sustainability {
+      background: #0d1a14;
+      padding: 64px 40px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .sus-label { font-size: 11px; color: #5DCAA5; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .sus-content h2 { font-size: 28px; font-weight: 500; color: #fff; margin-bottom: 16px; letter-spacing: -0.3px; }
+    .sus-content p { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 24px; }
+    .sus-quote {
+      border-left: 2px solid #1D9E75; padding-left: 16px;
+      font-size: 15px; font-style: italic; color: rgba(255,255,255,0.55); line-height: 1.6;
+    }
+    .sus-pillars { display: flex; flex-direction: column; gap: 12px; }
+    .pillar {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: var(--border-radius-lg); padding: 16px 20px;
+    }
+    .pillar-icon { font-size: 24px; margin-top: 2px; flex-shrink: 0; }
+    .pillar h4 { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 3px; }
+    .pillar p { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+    .news-section { padding: 64px 40px; background: #f9f9f7; }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
+    .news-card {
+      background: #fff; border: 0.5px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg); padding: 20px;
+    }
+    .news-tag { font-size: 11px; color: #1D9E75; margin-bottom: 8px; letter-spacing: 0.3px; }
+    .news-card h4 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; margin-bottom: 8px; }
+    .news-card span { font-size: 12px; color: var(--color-text-secondary); }
+
+    .footer {
+      background: #080f0b;
+      border-top: 0.5px solid rgba(255,255,255,0.06);
+      padding: 32px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.5); }
+    .footer-logo span { color: #1D9E75; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+    .motto { font-size: 12px; color: rgba(255,255,255,0.35); font-style: italic; }
+
+    /* ===== CHATBOT ===== */
+    #chat-btn{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;
+      background:#1D9E75;color:#fff;border:none;font-size:24px;cursor:pointer;z-index:100}
+    #chat-box{position:fixed;bottom:92px;right:24px;width:340px;height:460px;background:#fff;
+      border:.5px solid #e0e0e0;border-radius:8px;display:none;flex-direction:column;z-index:100;
+      box-shadow:0 8px 30px rgba(0,0,0,.2)}
+    #chat-head{background:#0d1a14;color:#fff;padding:14px 16px;font-size:14px;border-radius:8px 8px 0 0}
+    #chat-msgs{flex:1;overflow-y:auto;padding:12px;font-size:13px}
+    .m{margin:6px 0;padding:8px 12px;border-radius:8px;max-width:85%;line-height:1.5}
+    .u{background:#1D9E75;color:#fff;margin-left:auto}
+    .b{background:#f1f1ee;color:#000}
+    #chat-form{display:flex;border-top:.5px solid #e0e0e0}
+    #chat-in{flex:1;border:none;padding:12px;font-size:13px;outline:none}
+    #chat-form button{background:none;border:none;color:#1D9E75;padding:0 14px;cursor:pointer}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">TU<span>PAG</span></div>
+  <div class="nav-links">
+    <a href="#">Konzern</a>
+    <a href="#">Nachhaltigkeit</a>
+    <a href="#">News</a>
+    <a href="#">Pacht</a>
+    <a href="#">Karriere</a>
+  </div>
+  <button class="nav-cta">Kontakt</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      🏭
+      Mittelständische Unternehmensgruppe · Gegründet 2013
+    </div>
+    <h1>35 Unternehmen.<br>Eine <em>gemeinsame</em> Vision.</h1>
+    <p>Der TUPAG-Konzern verbindet Lebensmittelindustrie, Landwirtschaft, Maschinenbau, Bau & Garten und Kreislaufwirtschaft unter einem Dach — nachhaltig, regional und zukunftsorientiert.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Konzern entdecken</button>
+      <button class="btn-secondary">Karriere bei TUPAG</button>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-number">35<span>+</span></div>
+    <div class="stat-label">Einzelunternehmen im Konzern</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">3<span>Mio.</span></div>
+    <div class="stat-label">Kunden weltweit</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">CO₂<span>↓</span></div>
+    <div class="stat-label">Klimapositives Unternehmensziel</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">Unsere Segmente</div>
+  <div class="section-title">Breit aufgestellt, tief verankert</div>
+  <div class="section-sub">Jedes Tochterunternehmen agiert in seinem Kernkompetenzbereich — für maximale Spezialisierung und Wettbewerbsstärke.</div>
+  
+  <div class="segments">
+    <div class="segment-card">
+      <div class="segment-icon" style="background:#E1F5EE;">
+        🥗
+      </div>
+      <h3>Lebensmittelindustrie</h3>
+      <p>Eigenmarken & HAINICH Konserven — vom Feld bis ins Regal.</p>
+    </div>
+    <div class="segment-card">
+      <div class="segment-icon" style="background:#EAF3DE;">
+        🌱
+      </div>
+      <h3>Landwirtschaft</h3>
+      <p>Bio- und konventionelle Betriebe mit natürlicher Fruchtfolge.</p>
+    </div>
+    <div class="segment-card">
+      <div class="segment-icon" style="background:#FAEEDA;">
+        🚜
+      </div>
+      <h3>Maschinen</h3>
+      <p>Industrie-, Land- und Baumaschinen aus einer Hand.</p>
+    </div>
+    <div class="segment-card">
+      <div class="segment-icon" style="background:#E6F1FB;">
+        🏗️
+      </div>
+      <h3>Bau & Garten</h3>
+      <p>Erden, Substrate und Baustoffe für Profis und Privatkunden.</p>
+    </div>
+    <div class="segment-card">
+      <div class="segment-icon" style="background:#EEEDFE;">
+        ♻️
+      </div>
+      <h3>Kreislaufwirtschaft</h3>
+      <p>Nachhaltige Ressourcennutzung und Wiederverwertung.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sustainability">
+  <div class="sus-content">
+    <div class="sus-label">Nachhaltigkeit</div>
+    <h2>Klimapositiv denken, regional handeln</h2>
+    <p>Wir verstehen Nachhaltigkeit nicht als Marketingbegriff, sondern als Grundlage unseres Handelns — ökologisch, sozial und wirtschaftlich.</p>
+    <div class="sus-quote">"Wir sitzen alle in einem Boot." — Leitbild TUPAG-Konzern</div>
+  </div>
+  <div class="sus-pillars">
+    <div class="pillar">
+      <div class="pillar-icon">🍃</div>
+      <div>
+        <h4>CO₂-neutrale Produktion</h4>
+        <p>Ziel: alle Produkte und Vorprodukte klimaneutral herzustellen.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📍</div>
+      <div>
+        <h4>Regionale Wertschöpfung</h4>
+        <p>Lokale Zulieferer, kurze Transportwege, Stärkung der Region.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">⚡</div>
+      <div>
+        <h4>Biogas & erneuerbare Energie</h4>
+        <p>CO₂-neutrale Stromgewinnung durch eigene Biogasanlagen.</p>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">👥</div>
+      <div>
+        <h4>Mitarbeiter als Gemeinschaft</h4>
+        <p>Sichere Arbeitsplätze und aktives Engagement für die Region.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="news-section">
+  <div class="section-label">Aktuelles</div>
+  <div class="section-title">News aus dem Konzern</div>
+  <div class="news-grid">
+    <div class="news-card">
+      <div class="news-tag">Lebensmittelindustrie</div>
+      <h4>HAINICH erweitert Bio-Produktlinie für 2026</h4>
+      <span>Mai 2026</span>
+    </div>
+    <div class="news-card">
+      <div class="news-tag">Nachhaltigkeit</div>
+      <h4>TUPAG erreicht neues Ziel bei CO₂-Reduktion</h4>
+      <span>April 2026</span>
+    </div>
+    <div class="news-card">
+      <div class="news-tag">Karriere</div>
+      <h4>Neue Stellen in der Kreislaufwirtschaft ausgeschrieben</h4>
+      <span>März 2026</span>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">TU<span>PAG</span>-Holding-AG</div>
+  <div class="motto">Wir sitzen alle in einem Boot.</div>
+  <div class="footer-links">
+    <a href="#">Kontakt</a>
+    <a href="#">Datenschutz</a>
+    <a href="#">Impressum</a>
+  </div>
+</footer>
+
+<!-- ===== CHATBOT ===== -->
+<button id="chat-btn">💬</button>
+<div id="chat-box">
+  <div id="chat-head">TUPAG Assistent</div>
+  <div id="chat-msgs"></div>
+  <form id="chat-form">
+    <input id="chat-in" placeholder="Ihre Frage..." autocomplete="off">
+    <button type="submit">Senden</button>
+  </form>
+</div>
+
+<script>
+const box = document.getElementById('chat-box');
+const msgs = document.getElementById('chat-msgs');
+const chatHistory = [];
+
+document.getElementById('chat-btn').onclick = () => {
+  box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+  if (!msgs.children.length) add('b', 'Hallo! Wie kann ich Ihnen zum TUPAG-Konzern helfen?');
+};
+
+function add(cls, text) {
+  const d = document.createElement('div');
+  d.className = 'm ' + cls;
+  d.textContent = text;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+/* =====================================================
+   ANTWORTEN HIER ÄNDERN / ERWEITERN
+   Jede Regel: words = Schlüsselwörter (Regex), reply = Antwort
+   Die erste passende Regel gewinnt (von oben nach unten).
+   ===================================================== */
+const RULES = [
+  // --- Begrüßungen ---
+  { words: /good morning/,                    reply: 'Good morning! How can I help you with the TUPAG Group?' },
+  { words: /guten morgen|gute morgen|good morgen/, reply: 'Guten Morgen! Wie kann ich Ihnen zum TUPAG-Konzern helfen?' },
+  { words: /guten tag/,                       reply: 'Guten Tag! Wie kann ich Ihnen helfen?' },
+  { words: /guten abend|good evening/,        reply: 'Guten Abend! Wie kann ich Ihnen helfen?' },
+
+  // --- Fragen zum Unternehmen (Text von Ihrer Webseite) ---
+  { words: /segment|bereiche|geschäftsfeld/,
+    reply: 'TUPAG ist in fünf Segmenten aktiv: Lebensmittelindustrie, Landwirtschaft, Maschinen, Bau & Garten und Kreislaufwirtschaft.' },
+  { words: /lebensmittel|hainich|konserve|food/,
+    reply: 'Lebensmittelindustrie: Eigenmarken & HAINICH Konserven – vom Feld bis ins Regal. HAINICH erweitert 2026 die Bio-Produktlinie.' },
+  { words: /landwirtschaft|bio|farm|agri/,
+    reply: 'Landwirtschaft: Bio- und konventionelle Betriebe mit natürlicher Fruchtfolge.' },
+  { words: /maschine|traktor|machine/,
+    reply: 'Maschinen: Industrie-, Land- und Baumaschinen aus einer Hand.' },
+  { words: /bau|garten|erde|substrat|baustoff/,
+    reply: 'Bau & Garten: Erden, Substrate und Baustoffe für Profis und Privatkunden.' },
+  { words: /kreislauf|recycling|wiederverwert/,
+    reply: 'Kreislaufwirtschaft: Nachhaltige Ressourcennutzung und Wiederverwertung.' },
+  { words: /biogas|energie|strom/,
+    reply: 'Wir gewinnen CO₂-neutralen Strom durch eigene Biogasanlagen.' },
+  { words: /nachhaltig|klima|co2|co₂|umwelt|sustainab/,
+    reply: 'Nachhaltigkeit ist die Grundlage unseres Handelns – ökologisch, sozial und wirtschaftlich. Unser Ziel: alle Produkte und Vorprodukte klimaneutral herstellen (klimapositives Unternehmensziel).' },
+  { words: /region|lieferant|zulieferer/,
+    reply: 'Regionale Wertschöpfung: lokale Zulieferer, kurze Transportwege und Stärkung der Region.' },
+  { words: /karriere|job|stelle|bewerb|arbeit|mitarbeiter|career/,
+    reply: 'Wir bieten sichere Arbeitsplätze und engagieren uns für die Region. Aktuell sind neue Stellen in der Kreislaufwirtschaft ausgeschrieben – siehe Menüpunkt "Karriere".' },
+  { words: /gegründet|gründung|seit wann|founded|2013/,
+    reply: 'Der TUPAG-Konzern ist eine mittelständische Unternehmensgruppe und wurde 2013 gegründet.' },
+  { words: /wie viele|anzahl|35|how many/,
+    reply: 'Zum TUPAG-Konzern gehören über 35 Einzelunternehmen.' },
+  { words: /kunden|customers/,
+    reply: 'TUPAG hat rund 3 Mio. Kunden weltweit.' },
+  { words: /pacht/,
+    reply: 'Informationen zum Thema Pacht finden Sie im Menüpunkt "Pacht".' },
+  { words: /news|aktuell|neuigkeit/,
+    reply: 'Aktuelles: HAINICH erweitert die Bio-Produktlinie (Mai 2026), TUPAG erreicht ein neues CO₂-Reduktionsziel (April 2026), neue Stellen in der Kreislaufwirtschaft (März 2026).' },
+  { words: /kontakt|telefon|e-?mail|adresse|contact/,
+    reply: 'Über den Button "Kontakt" oben rechts auf der Seite erreichen Sie uns.' },
+  { words: /motto|leitbild|boot/,
+    reply: 'Unser Leitbild: "Wir sitzen alle in einem Boot."' },
+  { words: /tupag|firma|unternehmen|konzern|company|über uns|wer seid ihr|wer ist/,
+    reply: 'Der TUPAG-Konzern ist eine mittelständische Unternehmensgruppe mit über 35 Unternehmen. Er verbindet Lebensmittelindustrie, Landwirtschaft, Maschinenbau, Bau & Garten und Kreislaufwirtschaft – nachhaltig, regional und zukunftsorientiert.' },
+
+  // --- Einfache Begrüßung (steht weiter unten, damit Fragen Vorrang haben) ---
+  { words: /\bhello\b|\bhi\b|\bhey\b/,        reply: 'Hello! How can I help you with the TUPAG Group?' },
+  { words: /\bhallo\b|\bhalli\b|\bmoin\b|\bservus\b/, reply: 'Hallo! Wie kann ich Ihnen zum TUPAG-Konzern helfen?' },
+  { words: /danke|thanks|thank you/,          reply: 'Gern geschehen! Gibt es noch etwas, wobei ich helfen kann?' },
+  { words: /tschüss|tschuss|bye|auf Wiedersehen/, reply: 'Auf Wiedersehen! Einen schönen Tag noch.' }
+];
+
+const FALLBACK = 'Dazu habe ich leider keine Information. Fragen Sie mich z. B. nach Segmenten, Nachhaltigkeit, Karriere oder Kontakt.';
+
+function getReply(text) {
+  const t = text.toLowerCase();
+  for (const rule of RULES) {
+    if (rule.words.test(t)) return rule.reply;
+  }
+  return FALLBACK;
+}
+
+document.getElementById('chat-form').onsubmit = e => {
+  e.preventDefault();
+  const input = document.getElementById('chat-in');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  add('u', text);
+  const wait = add('b', '…');
+  setTimeout(() => {
+    const reply = getReply(text);
+    wait.textContent = reply;
+    chatHistory.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 400);
+};
+</script>
+
+</body>
+</html>
+
+
