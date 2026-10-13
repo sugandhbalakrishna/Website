@@ -170,6 +170,12 @@
     .m{margin:6px 0;padding:8px 12px;border-radius:8px;max-width:85%;line-height:1.5}
     .u{background:#1D9E75;color:#fff;margin-left:auto}
     .b{background:#f1f1ee;color:#000}
+    .b a{color:#1D9E75;font-weight:500}
+    .b .fact{margin:2px 0}
+    .b .fact b{font-weight:500}
+    .b .soil-title{margin-top:8px;font-weight:500}
+    .b .soil a{display:block;margin:2px 0}
+    .b .more{display:inline-block;margin-top:8px}
     #chat-form{display:flex;border-top:.5px solid #e0e0e0}
     #chat-in{flex:1;border:none;padding:12px;font-size:13px;outline:none}
     #chat-form button{background:none;border:none;color:#1D9E75;padding:0 14px;cursor:pointer}
@@ -342,7 +348,7 @@
   <div id="chat-head">TUPAG Assistent</div>
   <div id="chat-msgs"></div>
   <form id="chat-form">
-    <input id="chat-in" placeholder="Ihre Frage..." autocomplete="off">
+    <input id="chat-in" placeholder="Ihre Frage oder Pflanzenname..." autocomplete="off">
     <button type="submit">Senden</button>
   </form>
 </div>
@@ -354,7 +360,7 @@ const chatHistory = [];
 
 document.getElementById('chat-btn').onclick = () => {
   box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  if (!msgs.children.length) add('b', 'Hallo! Wie kann ich Ihnen zum TUPAG-Konzern helfen?');
+  if (!msgs.children.length) add('b', 'Hallo! Wie kann ich Ihnen zum TUPAG-Konzern helfen? Sie können auch einen Pflanzennamen oder den Code von der Pflanze eingeben.');
 };
 
 function add(cls, text) {
@@ -364,6 +370,288 @@ function add(cls, text) {
   msgs.appendChild(d);
   msgs.scrollTop = msgs.scrollHeight;
   return d;
+}
+
+/* Creates a clickable link inside a parent element */
+function addLink(parent, text, url, cls) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = text;
+  if (cls) a.className = cls;
+  parent.appendChild(a);
+  return a;
+}
+
+/* Shows normal text, or a full plant card if the reply is {plant} */
+function setReply(el, reply) {
+  el.textContent = '';
+  if (typeof reply === 'object' && reply.plant) {
+    const p = reply.plant;
+
+    const title = document.createElement('strong');
+    title.textContent = p.label;
+    el.appendChild(title);
+
+    const sum = document.createElement('div');
+    sum.textContent = p.summary;
+    sum.style.margin = '6px 0';
+    el.appendChild(sum);
+
+    p.facts.forEach(([key, value]) => {
+      const row = document.createElement('div');
+      row.className = 'fact';
+      const k = document.createElement('b');
+      k.textContent = key + ': ';
+      row.appendChild(k);
+      row.appendChild(document.createTextNode(value));
+      el.appendChild(row);
+    });
+
+    if (p.soil && p.soil.length) {
+      const st = document.createElement('div');
+      st.className = 'soil-title';
+      st.textContent = 'Erde-Empfehlung:';
+      el.appendChild(st);
+      const soil = document.createElement('div');
+      soil.className = 'soil';
+      p.soil.forEach(s => addLink(soil, s.name, s.url));
+      el.appendChild(soil);
+    }
+
+    addLink(el, 'Zur Produktseite', p.url, 'more');
+  } else {
+    el.textContent = reply;
+  }
+}
+
+/* =====================================================
+   PFLANZEN – HIER NEUE PFLANZEN EINTRAGEN
+   id    = Code von Etikett/Barcode/QR (Kleinbuchstaben)
+   names = alle Namen, unter denen Kunden suchen könnten
+           (deutsch, lateinisch, Tippfehler – Kleinbuchstaben)
+   url   = Seite mit Pflanzenhinweisen / Standortfaktoren
+   Pflanzen werden VOR allen anderen Regeln geprüft.
+   ===================================================== */
+const PLANTS = [
+  {
+    id: 'keyqauam',
+    names: ['ageratum houstonianum', 'ageratum', 'leberbalsam'],
+    label: 'Ageratum houstonianum / Leberbalsam',
+    summary: 'Beetpflanze, mäßig feucht, nicht winterhart, einjährig, sonniger Standort, alle zwei Wochen mit einem Dünger für Balkonblumen versorgen.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'einjährig'],
+      ['Standort', 'Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Kübel'],
+      ['Farbe', 'lila']
+    ],
+    soil: [
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' },
+      { name: 'THOMASAN® Blumenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-blumenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/ageratum-houstonianum-leberbalsam/'
+  },
+
+  {
+    id: '07VP4X39',
+    names: ['anemone', 'windröschen'],
+    label: 'Anemone / Windröschen',
+    summary: 'Beetpflanze, nicht zu feucht, winterhart, mehrjährig, sonniger bis halbschattiger, warmer, windgeschützter Standort, mit etwas reifem Kompost düngen.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'nicht winterhart, winterhart mit Schutz'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten, Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Kübel'],
+      ['Farbe', 'lila, pink, rosa, rot, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' },
+      { name: 'THOMASAN® Blumenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-blumenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/anemone-windroschen/'
+  },
+
+  {
+    id: 'VEEDOP4N',
+    names: ['antirrhinum', 'antirrhinum majus', 'anthirrinum', 'löwenmaul', 'loewenmaul', 'lowenmaul'],
+    label: 'Antirrhinum / Löwenmaul',
+    summary: 'Beet- und Kübelpflanze, ausreichend gießen, nicht winterhart, einjährig, warmer, windgeschützter Standort, im Frühjahr reifen Kompost und Hornspäne düngen.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'einjährig'],
+      ['Standort', 'Halbschatten, Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Kübel'],
+      ['Farbe', 'bunt, gelb, orange, pink, rosa, rot, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Kübel- & Zitruspflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-kuebel-zitruspflanzenerde' }, // URL PRÜFEN!
+      { name: 'THOMASAN® Blumenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-blumenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/anthirrinum-lowenmaul/'
+  },
+
+  {
+    id: 'JST34YJT',
+    names: ['asparagus densiflorus', 'asparagus', 'zierspargel', 'sprengerspargel', 'asparagus sprengeri'],
+    label: 'Asparagus densiflorus / Zierspargel',
+    summary: 'Zimmerpflanzen, gleichmäßig feucht halten, hellen halbschattigen Platz im Haus, im Sommer geschützten Platz draußen im Freien, im Winter einmal im Monat düngen.',
+    facts: [
+      ['Wuchsform', 'halb hängend, stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten, Schatten, Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Friedhof, Kübel, Zimmer'],
+      ['Farbe', 'grün']
+    ],
+    soil: [
+      { name: 'THOMASAN® Bio Universalerde torffrei', url: 'https://www.erdenwerk.de/produkte/thomasanr-bio-universalerde-torffrei' },
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/asparagus-densiflorus-zierspargel/'
+  },
+
+  {
+    id: 'ERTMZCTR',
+    names: ['aster novi belgii', 'aster', 'glattblatt-aster', 'glattblattaster', 'glattblatt aster', 'herbstaster'],
+    label: 'Aster novi belgii / Glattblatt-Aster',
+    summary: 'Beet- und Schnittstaude, regelmäßiges Gießen, winterhart, mehrjährig, sonniger, kühler und luftiger Standort, alljährliches Düngen im Frühjahr.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten, Schatten, Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Friedhof, Kübel'],
+      ['Farbe', 'blau, pink, rosa, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Pflanzerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-pflanzerde' },
+      { name: 'THOMASAN® Blumenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-blumenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/aster-novi-belgii-glattblatt-aster/'
+  },
+
+  {
+    id: 'SBWH5FY7',
+    names: ['astilbe', 'prachtspiere', 'astilben'],
+    label: 'Astilbe / Prachtspiere',
+    summary: 'Gartenstaude, in Trockenperioden gleichmäßig gießen, winterhart, mehrjährig, halbschattiger Standort, regelmäßig düngen.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten'],
+      ['Standplatz', 'Freiland, Kübel'],
+      ['Farbe', 'rosa']
+    ],
+    soil: [
+      { name: 'THOMASAN® Pflanzerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-pflanzerde' },
+      { name: 'THOMASAN® Blumenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-blumenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/astilbe-prachtspiere/'
+  },
+
+  {
+    id: '3FPD9UP4',
+    names: ['asteriscus maritimus', 'asteriscus', 'goldtaler', 'goldmünze', 'goldmuenze'],
+    label: 'Asteriscus maritimus / Goldtaler',
+    summary: 'Balkonpflanze, gleichmäßig feucht halten, nicht winterhart, einjährig, vollsonnig bis maximal halbschattig, jede Woche reichlich düngen.',
+    facts: [
+      ['Wuchsform', 'stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'einjährig'],
+      ['Standort', 'Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Friedhof, Kübel'],
+      ['Farbe', 'gelb']
+    ],
+    soil: [
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' },
+      { name: 'THOMASAN® Pflanzerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-pflanzerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/asteriscus-maritimus-goldtaler/'
+  },
+
+  {
+    id: 'V7MMNZG5',
+    names: ['bacopa', 'schneeflockenblume', 'sutera', 'sutera cordata', 'schneeflöckchen'],
+    label: 'Bacopa / Schneeflockenblume',
+    summary: 'Balkon- und Terrassenpflanze, durchgängig feucht halten, Staunässe vermeiden, nicht winterhart, mehrjährig, sonniger bis halbschattiger, warmer Standort, von Mai bis September alle 14 Tage flüssig düngen.',
+    facts: [
+      ['Wuchsform', 'hängend, kompakt'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten, Sonne'],
+      ['Standplatz', 'Balkon, Friedhof, Kübel'],
+      ['Farbe', 'lila, rosa, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Bio Universalerde torffrei', url: 'https://www.erdenwerk.de/produkte/thomasanr-bio-universalerde-torffrei' },
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/bacopa-schneeflockenblume/'
+  },
+
+  {
+    id: 'EONAT8V5',
+    names: ['begonia elatior', 'zimmerbegonie', 'elatior-begonie', 'elatiorbegonie'],
+    label: 'Begonia elatior / Zimmerbegonie',
+    summary: 'Zimmerpflanze, sparsam gießen, nicht winterhart, mehrjährig, warm und hell jedoch ohne direkte Sonneneinstrahlung, alle zwei Wochen flüssig düngen.',
+    facts: [
+      ['Wuchsform', 'kompakt, stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten'],
+      ['Standplatz', 'Balkon, Kübel, Zimmer'],
+      ['Farbe', 'bunt, gelb, orange, pink, rosa, rot, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Zimmerpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-zimmerpflanzenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/begonia-elatior-zimmerbegoniey/'
+  },
+
+  {
+    id: 'TNRDUNOC',
+    names: ['begonia semperflorens', 'semperflorens', 'eisbegonie', 'beetbegonie', 'kirschblüten', 'kirschblüte', 'kirschblueten'],
+    label: 'Begonia semperflorens / Eisbegonie, Kirschblüten',
+    image: 'https://www.tmzierpflanzen.de/wp-content/uploads/2021/11/begonia_semperflorens_eisbegonie_kirschbluete.png',
+    summary: 'Beetpflanze für Friedhof, Schalen und Rabatten, Erde leicht feucht halten, nicht winterhart, mehrjährig, Standort ist sonnig bis halbschattig, regelmäßig alle zwei Wochen düngen.',
+    facts: [
+      ['Wuchsform', 'kompakt, stehend'],
+      ['Winterhart', 'nicht winterhart'],
+      ['Lebensdauer', 'mehrjährig'],
+      ['Standort', 'Halbschatten, Schatten, Sonne'],
+      ['Standplatz', 'Balkon, Freiland, Friedhof, Kübel'],
+      ['Farbe', 'rosa, rot, weiß']
+    ],
+    soil: [
+      { name: 'THOMASAN® Bio Universalerde torffrei', url: 'https://www.erdenwerk.de/produkte/thomasanr-bio-universalerde-torffrei' },
+      { name: 'THOMASAN® Geranien- & Balkonpflanzenerde', url: 'https://www.erdenwerk.de/produkte/thomasanr-geranien-balkonpflanzenerde' }
+    ],
+    url: 'https://www.tmzierpflanzen.de/produkt/begonia-semperflorens-eisbegonie-kirschbluten/'
+  }
+
+
+
+  // Weitere Pflanze: Komma setzen und Block kopieren, z. B.
+  // ,{
+  //   id: 'abc12345',
+  //   names: ['ficus elastica', 'gummibaum'],
+  //   label: 'Gummibaum (Ficus elastica)',
+  //   url: 'https://www.tmzierpflanzen.de/produkt/...'
+  // }
+];
+
+function findPlant(t) {
+  t = t.toLowerCase().trim();
+  for (const p of PLANTS) {
+    if (t.includes(p.id.toLowerCase()) || p.names.some(n => t.includes(n.toLowerCase()))) return p;
+  }
+  return null;
 }
 
 /* =====================================================
@@ -420,13 +708,21 @@ const RULES = [
   { words: /\bhello\b|\bhi\b|\bhey\b/,        reply: 'Hello! How can I help you with the TUPAG Group?' },
   { words: /\bhallo\b|\bhalli\b|\bmoin\b|\bservus\b/, reply: 'Hallo! Wie kann ich Ihnen zum TUPAG-Konzern helfen?' },
   { words: /danke|thanks|thank you/,          reply: 'Gern geschehen! Gibt es noch etwas, wobei ich helfen kann?' },
-  { words: /tschüss|tschuss|bye|auf Wiedersehen/, reply: 'Auf Wiedersehen! Einen schönen Tag noch.' }
+  { words: /tschüss|tschuss|bye|auf wiedersehen/, reply: 'Auf Wiedersehen! Einen schönen Tag noch.' }
 ];
 
-const FALLBACK = 'Dazu habe ich leider keine Information. Fragen Sie mich z. B. nach Segmenten, Nachhaltigkeit, Karriere oder Kontakt.';
+const FALLBACK = 'Dazu habe ich leider keine Information. Fragen Sie mich z. B. nach Segmenten, Nachhaltigkeit, Karriere, Kontakt oder geben Sie einen Pflanzennamen ein.';
 
 function getReply(text) {
   const t = text.toLowerCase();
+
+  // 1) Plants first, so general rules (e.g. "bio", "garten") cannot catch them
+  const plant = findPlant(t);
+  if (plant) {
+    return { plant };
+  }
+
+  // 2) General company rules
   for (const rule of RULES) {
     if (rule.words.test(t)) return rule.reply;
   }
@@ -443,14 +739,27 @@ document.getElementById('chat-form').onsubmit = e => {
   const wait = add('b', '…');
   setTimeout(() => {
     const reply = getReply(text);
-    wait.textContent = reply;
-    chatHistory.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+    setReply(wait, reply);
+    chatHistory.push({ role: 'user', content: text }, { role: 'assistant', content: typeof reply === 'object' ? reply.plant.url : reply });
     msgs.scrollTop = msgs.scrollHeight;
   }, 400);
 };
+
+/* =====================================================
+   QR-CODE DIREKTLINK
+   Aufruf z. B.: index.html?plant=keyqauam
+   Öffnet den Chat und zeigt sofort die Pflanzenhinweise.
+   ===================================================== */
+(function () {
+  const code = new URLSearchParams(location.search).get('plant');
+  if (!code) return;
+  const plant = findPlant(code.toLowerCase());
+  if (!plant) return;
+  box.style.display = 'flex';
+  add('b', 'Hallo!');
+  setReply(add('b', ''), { plant });
+})();
 </script>
 
 </body>
 </html>
-
-
