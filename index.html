@@ -659,7 +659,7 @@ const PLANTS = [
 function findPlant(t) {
   t = t.toLowerCase().trim();
   for (const p of PLANTS) {
-    if (t.includes(p.id.toLowerCase()) || p.names.some(n => t.includes(n.toLowerCase()))) return p;
+    if (t.includes(p.id.toLowerCase()) || (p.ean && t.includes(p.ean)) || p.names.some(n => t.includes(n.toLowerCase()))) return p;
   }
   return null;
 }
