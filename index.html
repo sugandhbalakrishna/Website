@@ -348,7 +348,7 @@
   <div id="chat-head">TUPAG Assistent</div>
   <div id="chat-msgs"></div>
   <form id="chat-form">
-    <input id="chat-in" placeholder="Ihre Frage oder Pflanzenname..." autocomplete="off">
+    <input id="chat-in" placeholder="Pflanzennamen oder die EAN-Nummer ein." autocomplete="off">
     <button type="submit">Senden</button>
   </form>
 </div>
@@ -437,6 +437,7 @@ function setReply(el, reply) {
 const PLANTS = [
   {
     id: 'keyqauam',
+    ean: '2000000000015',
     names: ['ageratum houstonianum', 'ageratum', 'leberbalsam'],
     label: 'Ageratum houstonianum / Leberbalsam',
     summary: 'Beetpflanze, mäßig feucht, nicht winterhart, einjährig, sonniger Standort, alle zwei Wochen mit einem Dünger für Balkonblumen versorgen.',
@@ -457,6 +458,7 @@ const PLANTS = [
 
   {
     id: '07VP4X39',
+     ean: '2000000000022',
     names: ['anemone', 'windröschen'],
     label: 'Anemone / Windröschen',
     summary: 'Beetpflanze, nicht zu feucht, winterhart, mehrjährig, sonniger bis halbschattiger, warmer, windgeschützter Standort, mit etwas reifem Kompost düngen.',
@@ -477,6 +479,7 @@ const PLANTS = [
 
   {
     id: 'VEEDOP4N',
+    ean: '2000000000039',
     names: ['antirrhinum', 'antirrhinum majus', 'anthirrinum', 'löwenmaul', 'loewenmaul', 'lowenmaul'],
     label: 'Antirrhinum / Löwenmaul',
     summary: 'Beet- und Kübelpflanze, ausreichend gießen, nicht winterhart, einjährig, warmer, windgeschützter Standort, im Frühjahr reifen Kompost und Hornspäne düngen.',
@@ -497,6 +500,7 @@ const PLANTS = [
 
   {
     id: 'JST34YJT',
+    ean: '2000000000046',
     names: ['asparagus densiflorus', 'asparagus', 'zierspargel', 'sprengerspargel', 'asparagus sprengeri'],
     label: 'Asparagus densiflorus / Zierspargel',
     summary: 'Zimmerpflanzen, gleichmäßig feucht halten, hellen halbschattigen Platz im Haus, im Sommer geschützten Platz draußen im Freien, im Winter einmal im Monat düngen.',
@@ -517,6 +521,7 @@ const PLANTS = [
 
   {
     id: 'ERTMZCTR',
+    ean: '2000000000053',
     names: ['aster novi belgii', 'aster', 'glattblatt-aster', 'glattblattaster', 'glattblatt aster', 'herbstaster'],
     label: 'Aster novi belgii / Glattblatt-Aster',
     summary: 'Beet- und Schnittstaude, regelmäßiges Gießen, winterhart, mehrjährig, sonniger, kühler und luftiger Standort, alljährliches Düngen im Frühjahr.',
@@ -537,6 +542,7 @@ const PLANTS = [
 
   {
     id: 'SBWH5FY7',
+    ean: '2000000000060',
     names: ['astilbe', 'prachtspiere', 'astilben'],
     label: 'Astilbe / Prachtspiere',
     summary: 'Gartenstaude, in Trockenperioden gleichmäßig gießen, winterhart, mehrjährig, halbschattiger Standort, regelmäßig düngen.',
@@ -557,6 +563,7 @@ const PLANTS = [
 
   {
     id: '3FPD9UP4',
+    ean: '2000000000077',
     names: ['asteriscus maritimus', 'asteriscus', 'goldtaler', 'goldmünze', 'goldmuenze'],
     label: 'Asteriscus maritimus / Goldtaler',
     summary: 'Balkonpflanze, gleichmäßig feucht halten, nicht winterhart, einjährig, vollsonnig bis maximal halbschattig, jede Woche reichlich düngen.',
@@ -577,6 +584,7 @@ const PLANTS = [
 
   {
     id: 'V7MMNZG5',
+    ean: '2000000000084',
     names: ['bacopa', 'schneeflockenblume', 'sutera', 'sutera cordata', 'schneeflöckchen'],
     label: 'Bacopa / Schneeflockenblume',
     summary: 'Balkon- und Terrassenpflanze, durchgängig feucht halten, Staunässe vermeiden, nicht winterhart, mehrjährig, sonniger bis halbschattiger, warmer Standort, von Mai bis September alle 14 Tage flüssig düngen.',
@@ -597,6 +605,7 @@ const PLANTS = [
 
   {
     id: 'EONAT8V5',
+    ean: '2000000000091',
     names: ['begonia elatior', 'zimmerbegonie', 'elatior-begonie', 'elatiorbegonie'],
     label: 'Begonia elatior / Zimmerbegonie',
     summary: 'Zimmerpflanze, sparsam gießen, nicht winterhart, mehrjährig, warm und hell jedoch ohne direkte Sonneneinstrahlung, alle zwei Wochen flüssig düngen.',
@@ -616,6 +625,7 @@ const PLANTS = [
 
   {
     id: 'TNRDUNOC',
+    ean: '2000000000107',
     names: ['begonia semperflorens', 'semperflorens', 'eisbegonie', 'beetbegonie', 'kirschblüten', 'kirschblüte', 'kirschblueten'],
     label: 'Begonia semperflorens / Eisbegonie, Kirschblüten',
     image: 'https://www.tmzierpflanzen.de/wp-content/uploads/2021/11/begonia_semperflorens_eisbegonie_kirschbluete.png',
